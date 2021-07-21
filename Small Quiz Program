@@ -1,0 +1,169 @@
+/* QuizProgram - CMPP269 Assignment #2
+ * This program was built to allow a user to enter a file path for a text document, and build a quiz off of that text document. It is designed to handle
+ * two types of questions, fill in the blank and multiple choice (4 options). The program will then return the number of questions answered correctly,
+ * and a percentage based on the user's correct answers. There are three methods used in this program. The main method contains the prompt for the user to enter the file path, the scanner for reading the file, outputs the number of questions per topic, and returns the percentage the user
+ * receives after all of the questions have been answered. The Fill in the blank
+ (FB) method is activated for the FB type question, where it prompts the user
+ to enter a string response, then reads in the response and relays to the user
+ if they answered correctly or not. The result is returned to the caller of the method. The multiple choice method (MC) prints out the answer options to the MC question to the user, and checks whether or not the user inputs the correct response (1-4). It will display to the user whether the response was correct or not, then returns the response to the method caller.
+@authorVictor Nunez, Lisa Jowett
+@version 2021-04-11
+ */
+import java.util.*;
+import java.io.*;
+
+public class QuizProgram {
+    public static void main(String[] args) throws Exception
+    {
+        Scanner keyIn = new Scanner (System.in);
+        //ye olde variables
+        String numQuestions = "";
+        String topic = "";
+        String questionType = "";
+        String question = "";
+        String answers = "";
+        double qCount = 1.0;
+        double correctCount = 0.0;
+
+        System.out.println("* * * * *  Welcome to Quizzer!  * * * * *");
+        System.out.println();
+
+        System.out.print("Please enter your quiz question file path: ");
+        String filePath = keyIn.nextLine();
+        System.out.println();
+        //create file instance and scanner to read the file
+        File file = new File(filePath);
+        Scanner fileIn = new Scanner(file);
+
+        //get topic and question number
+        numQuestions = fileIn.next();
+        topic = fileIn.nextLine();
+
+        //display question opening
+        System.out.println("You will have " +  numQuestions +  " questions on the topic of " + topic + ".");
+        System.out.println("Press <Enter> when you are ready to start...");
+        String start = keyIn.nextLine();
+        while (fileIn.hasNext())
+        {
+
+            //get type, question, and answer
+            questionType = fileIn.next();
+            question = fileIn.nextLine();
+            answers = fileIn.nextLine();
+
+            //check what type of question
+            if(questionType.equals("FB"))
+            {
+                System.out.printf("Question #%.0f. Fill in the blank\n", qCount);
+                //calls the method for FB questions, returns if the question was answered correctly or not.
+                correctCount += doFBQuestion(question, answers, keyIn);
+            }
+            else
+            {
+                System.out.printf("Question #%.0f. Multiple choice\n", qCount);
+                //calls the method for MC questions, returns if the question was answered correctly or not.
+                correctCount += doMCQuestion(question, answers, keyIn);
+            }
+            qCount++;
+        }
+        //counter goes one higher on the loop than it needs to
+        qCount--;
+
+        System.out.println("Quiz completed.");
+        final double PERCENTAGE = correctCount / qCount * 100.0;
+        System.out.printf("Your score was %.0f out of %.0f or %.1f%%.\n", correctCount, qCount, PERCENTAGE);
+        System.out.print("Good-bye!");
+    }
+    //This method has two string parameters, taken from the question and answers in the main method.
+    //Prompts user to enter the answer with the references scanner object.
+    //checks the answer and returns the result to "correctCount" in the main method.
+    public static double doFBQuestion(String question, String answer, Scanner scan)
+    {
+        double result = 0.0;
+        System.out.println(question.trim());
+        System.out.print("Enter the missing word: ");
+        
+        String response = scan.nextLine();
+
+        if(response.equalsIgnoreCase(answer))
+        {
+            System.out.println("That's correct!");
+            result++;
+        }
+        else
+        {
+            System.out.println("Sorry, that's incorrect.");
+        }
+        //print a line of -
+        for(int i=0; i<75; i++) 
+        {
+            System.out.print("-");
+        }
+        System.out.println();
+        return result;
+    }
+    //This method has four string parametres, taken from the questions and answers in the main method. It finds the correct answer and compares it with what the user inputed. The result is returned to correctCount in the main method. 
+    public static double doMCQuestion(String question, String answer, Scanner sc)
+    {
+        double result = 0.0;
+        int correctAnswer;
+        System.out.println(question.trim());
+        //array to hold the answers
+        String[] options = answer.split(",");
+        //assign the strings from array to variables
+        String option1 = options[0];
+        String option2 = options[1];
+        String option3 = options[2];
+        String option4 = options[3];
+
+        //find the correct answer to compare input with
+        if(option1.contains("*"))
+        {
+            correctAnswer = 1;
+        }
+        else if(option2.contains("*"))
+        {
+            correctAnswer = 2;
+        }
+        else if(option3.contains("*"))
+        {
+            correctAnswer = 3;
+        }
+        else
+        {
+            correctAnswer = 4;
+        }
+        //remove * from correct answer
+        option1 = option1.replace("*", "");
+        option2 = option2.replace("*", "");
+        option3 = option3.replace("*", "");
+        option4 = option4.replace("*", "");
+        
+        System.out.println("   1) " + option1);
+        System.out.println("   2) " + option2);
+        System.out.println("   3) " + option3);
+        System.out.println("   4) " + option4);
+        
+        System.out.print("Enter your response (1-4): ");
+        String userInput = sc.nextLine();
+        //parse input to an integer for comparison
+        int userAnswer = Integer.parseInt(userInput);
+
+        if(userAnswer == correctAnswer)
+        {
+            System.out.println("That's correct!");
+            result++;
+        }
+        else
+        {
+            System.out.println("Sorry, that's incorrect.");
+        }
+        for(int i=0; i<75; i++) 
+        {
+            System.out.print("-");
+        }
+        System.out.println();
+        return result;
+    }
+}
+
