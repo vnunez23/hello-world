@@ -1,0 +1,86 @@
+/**
+ * RangeFinder - This short program is designed to read in a text file that was supplied that contained a list of electric vehicles. It finds the vehicle with the largest
+ * range.
+ * 
+ * @author Victor Nunez
+ * @version (a version number or a date)
+ */
+// Standard import for the Scanner class
+import java.util.*;
+import java.io.*;
+public class rangeFinder
+{
+    public static void main (String [] args) throws Exception
+    {
+
+        //Write a program to read in a list of electric vehicles. 
+        //Print out the vehicle with the longest range.
+
+        // Create a Scanner object attached to the keyboard
+        Scanner in = new Scanner (System.in);
+
+        //get user input
+        System.out.print("Enter the file path: ");
+        String filePath = in.nextLine();
+        //create new file based on input
+        File file = new File(filePath);
+        //create a scanner to read the file
+        Scanner fileIn = new Scanner(file);
+        //variables
+        int maxRange = 0;
+        String maxVehicle = "";
+        double maxPrice = 0.0;
+
+        while(fileIn.hasNext())
+        {
+            String vehicle1 = fileIn.nextLine();
+            double price1 = fileIn.nextDouble();
+            int range1 = fileIn.nextInt();
+
+            String temp = fileIn.nextLine();
+
+            String vehicle2 = fileIn.nextLine();
+            double price2 = fileIn.nextDouble();
+            int range2 = fileIn.nextInt();
+
+            String temp2 = fileIn.nextLine();
+
+            String vehicle3 = fileIn.nextLine();
+            double price3 = fileIn.nextDouble();
+            int range3 = fileIn.nextInt();
+
+            String temp3 = fileIn.nextLine();
+
+            String vehicle4 = fileIn.nextLine();
+            double price4 = fileIn.nextDouble();
+            int range4 = fileIn.nextInt();
+
+            if(range1 > range2 && range1 > range3 && range1 > range4)
+            {
+                maxRange = range1;
+                maxVehicle = vehicle1;
+                maxPrice = price1;
+            }
+            else if (range2 > range1 && range2 > range3 && range2 > range4)
+            {
+                maxRange = range2;
+                maxVehicle = vehicle2;
+                maxPrice = price2;
+            }
+            else if (range3 > range1 && range3 > range2 && range3 > range4)
+            {
+                maxRange = range3;
+                maxVehicle = vehicle3;
+                maxPrice = price3;
+            }
+            else
+            {
+                maxRange = range4;
+                maxVehicle = vehicle4;
+                maxPrice = price4;
+            }
+        }
+        System.out.println("Car with the longest range = " + maxVehicle);
+        System.out.printf("Price $%.2f Range = %d", maxPrice, maxRange);
+    }
+}
